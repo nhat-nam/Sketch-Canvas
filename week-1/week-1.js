@@ -2,7 +2,7 @@ var canvas, ctx, week1;
 var _prevTime = 0;
 
 var MAX_RADIUS = 20;
-//creates the week 1 object
+//defines the week 1 object
 function Week1(){
     this.circles = []
 
