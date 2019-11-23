@@ -205,3 +205,16 @@ class Neptune extends Planet{
         ctx.fill();
     }
 }
+
+class Pluto extends Planet{
+    constructor(x, y, r){
+        super(x,y,r);
+        this.angular_velocity = EARTH_VELOCITY/248;
+    }
+    drawPlanet(ctx){
+        ctx.beginPath();
+        ctx.fillStyle="rgba(0,20,255,1)";
+        ctx.arc(this.x, 0, this.r, 0, 2*Math.PI);
+        ctx.fill();
+    }
+}

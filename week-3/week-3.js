@@ -1,4 +1,4 @@
-var canvas, ctx, week2;
+var canvas, ctx, week3;
 var _prevTime = 0;
 
 var MAGNITUDE = 20
@@ -92,8 +92,6 @@ function Line(x, y, length, line_timer){
         ctx.arc(0,0,this.width,0,Math.PI*2);
         ctx.moveTo(0, -1*this.length/2);
         ctx.lineTo(0, this.length/2);
-        //ctx.moveTo(this.x, this.y)
-        //ctx.lineTo(this.x, this.y + this.length)
         ctx.stroke();
         ctx.restore();
     }
