@@ -1,0 +1,32 @@
+<html>
+    <title>Week 8</title>
+<head>
+</head>
+<body style="font-family:sans-serif;text-align: center;margin:auto; background:black;">
+  <div id="heading">
+    <h1 style = "margin-top:20px;color:rgba(200,0,0,.9);">Nam's Weekly Canvas Sketch</h1>
+    <h3 style="color:rgba(0,200,0,.9);">Week 8</h3>
+  </div>
+    <div id="day-content">
+        <canvas id = "canvas" width = 500 height = 500 style = "background:rgba(225, 233, 242, 1);border:2px solid red;">
+        </canvas><br/>
+        <canvas id = "canvas2" width = 500 height = 500 style = "background:rgba(225, 233, 242, 1);border:2px solid green;">
+        </canvas>
+    </div>
+    <audio id="fireball">
+			<source src="./fireball_explosion.m4a" type="audio/m4a">
+        Your browser does not support the audio element.
+
+		</audio>
+    <script type="text/javascript" src="./week-8.js"></script>
+    <script type="text/javascript">
+      document.body.onload=function(){
+        WIDTH = window.innerWidth-4;
+        HEIGHT= window.innerHeight -125;
+
+        runWeek8Canvas();
+      }
+    </script>
+
+</body>
+</html>
