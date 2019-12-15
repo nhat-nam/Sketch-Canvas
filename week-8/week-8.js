@@ -319,7 +319,7 @@ class FireParticle{
 
     if(this.dy < 15 && !this.from_explosion){
       this.dy+= GRAVITY_CONSTANT
-    }else if(this.dy < 100 && this.from_explosion){
+    }else if(this.dy < 300 && this.from_explosion){
       this.dy+= GRAVITY_CONSTANT;
     }
 
