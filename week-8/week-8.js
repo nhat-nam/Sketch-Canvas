@@ -59,7 +59,7 @@ function Week8(){
   this.color_scheme = "red";
 
   this.update = function(delta){
-    if(this.ticks % 45 == 0){
+    if(this.ticks % 80 == 0){
 
       if(this.color_scheme == "red"){
         var fb = new FireBall(randBetween(29, WIDTH-29), randBetween(29, HEIGHT-29), randBetween(15,30))
