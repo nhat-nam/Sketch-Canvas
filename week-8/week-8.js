@@ -349,9 +349,9 @@ class GreenFireParticle extends FireParticle{
     ctx.save()
     ctx.fillStyle = "rgba(102,255,25,"+this.alpha+")"
     ctx.strokeStyle= "rgba(51,255,51,"+this.alpha+")"
-    ctx.fillRect(this.x, this.y, this.width, this.height)
-    ctx.strokeRect(this.x, this.y, this.width, this.height);
-    ctx.restore()
+      ctx.fillRect(this.x, this.y, this.width, this.height)
+      ctx.strokeRect(this.x, this.y, this.width, this.height);
+      ctx.restore()
   }
 
 }
