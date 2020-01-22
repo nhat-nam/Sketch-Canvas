@@ -56,7 +56,7 @@ function Week10(){
     }
     ctx.globalCompositeOperation = 'source-atop';
     ctx.fillStyle = 'red';
-    ctx.font = "900 60px Arial"
+    ctx.font = "1000 50px Arial"
     ctx.fillText("Happy",150,200);
     ctx.fillText("New Year!",100, 270);
 
@@ -101,7 +101,7 @@ class FireWork{
     this.ticks++;
     if(this.y< 200 && !this.timer_started){
       this.ticks = 0;
-      this.timer = Math.random()*20+30;
+      this.timer = Math.random()*10+17;
       this.timer_started = true;
     }
     if(this.ticks > this.timer && !this.has_exploded){
