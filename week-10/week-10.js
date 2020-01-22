@@ -56,7 +56,7 @@ function Week10(){
     }
     ctx.globalCompositeOperation = 'source-atop';
     ctx.fillStyle = 'red';
-    ctx.font = "1000 50px Arial"
+    ctx.font = "900 60px Arial"
     ctx.fillText("Happy",150,200);
     ctx.fillText("New Year!",100, 270);
 
@@ -72,7 +72,7 @@ class FireWork{
 
 
     this.dx =  ((250-this.x)/150) *Math.random()*50;
-    this.dy = -1 * Math.random()*100 - 100;
+    this.dy = -1 * Math.random()*80 - 80;
 
     this.angle = Math.atanh(-1*this.dx/this.dy);
 
