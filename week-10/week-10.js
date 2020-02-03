@@ -21,7 +21,6 @@ function loop(timestamp){
    window.requestAnimationFrame(loop);
    ctx.fillStyle="rgba(0,0,100,1)"
    ctx.clearRect(0,0,500,500)
-   //ctx.fillRect(0,0,500,500);
    week10.update(delta)
    week10.render(ctx)
 }
@@ -42,7 +41,9 @@ function Week10(){
     this.ticks++
     for(var i=0;i<this.fireworks.length;i++){
       this.fireworks[i].update(d);
-
+      if(this.fireworks[i].delete){
+        this.fireworks.splice(i, 1)
+      }
     }
   }
   this.render = function(ctx){
@@ -80,11 +81,14 @@ class FireWork{
     this.ticks =0;
     this.radius = 10
     this.timer_started = false;
-    this.color = { red: 0, green: Math.random()*255, blue: Math.random()*255};
+    this.explosion_particles_color = { red: 0, green: Math.random()*255, blue: Math.random()*255};
     this.explosion =null;
     this.has_exploded = false;
     this.img = new Image()
     this.img.src = "./firework.png"
+    this.delete = false
+    this.color_green_array = [50,110,215]
+    this.emmision_particles = []
   }
   render(ctx){
     if(this.explosion){
@@ -93,28 +97,48 @@ class FireWork{
       ctx.save();
       ctx.translate(this.x, this.y);
       ctx.rotate(this.angle);
-      ctx.drawImage(this.img,0, 0);
+      ctx.drawImage(this.img,-23,-35);
       ctx.restore();
+    }
+    for(var i =0; i<this.emmision_particles.length; i++){
+      this.emmision_particles[i].render(ctx)
     }
   }
   update(d){
     this.ticks++;
-    if(this.y< 200 && !this.timer_started){
+    if(this.ticks%3==0 && !this.has_exploded){
+      var epc = {red: 255,green: 0,blue: 0};
+      epc.green = RandomNumberPicker(this.color_green_array)
+      //i changed...sorry
+      var x = Math.abs(15* Math.acos(this.angle));
+      var y = 30;
+      var e_p = new EmissionParticle(this.x+x, this.y+y, epc,this.angle)
+      this.emmision_particles.push(e_p)
+    }
+    if(this.y< 235 && !this.timer_started){
       this.ticks = 0;
       this.timer = Math.random()*10+17;
       this.timer_started = true;
     }
     if(this.ticks > this.timer && !this.has_exploded){
       this.explosion = new Explosion(this.x, this.y);
-      this.explosion.color= this.color;
+      this.explosion.particles_color= this.explosion_particles_color;
       this.has_exploded = true;
     }
     if(this.explosion){
       this.explosion.update(d);
+      if(this.explosion.delete && this.emmision_particles.length == 0){
+        this.delete = true
+      }
     }else{
-      //
       this.x = this.x + this.dx*d/1000;
       this.y = this.y + this.dy*d/1000;
+    }
+    for(var i =0; i<this.emmision_particles.length; i++){
+      this.emmision_particles[i].update(d)
+      if(this.emmision_particles[i].delete){
+        this.emmision_particles.splice(i,1)
+      }
     }
   }
 }
@@ -126,10 +150,11 @@ class Explosion{
     this.particles =[];
     this.ticks = 0
     this.radius = 40
-    this.color = {
+    this.delete = false
+    this.particles_color = {
       red: 0,
       green: 0,
-      blue: 200
+      blue: 0
     };
 
   }
@@ -148,9 +173,9 @@ class Explosion{
   }
   update(d){
     this.ticks++
-    if(this.ticks > 2 && this.ticks<4){
+    if(this.ticks == 3){
       for(var i=0;i<70;i++){
-          this.particles.push(new Particle(this.x, this.y, this.color));
+          this.particles.push(new Particle(this.x, this.y, this.particles_color));
       }
     }
     for(var i=0;i<this.particles.length;i++){
@@ -158,6 +183,9 @@ class Explosion{
       if(this.particles[i].delete){
         this.particles.splice(i,1);
       }
+    }
+    if(this.particles.length == 0 && this.ticks >= 3){
+      this.delete = true
     }
   }
 }
@@ -176,13 +204,13 @@ class Particle{
     this.is_trail = false;
     this.delete = false;
     this.opacity = 1;
-
+    this.side = 5
 
   }
   render(ctx){
     ctx.save();
     ctx.fillStyle="rgba("+this.color.red+","+this.color.green+","+this.color.blue+","+this.opacity+")";
-    ctx.fillRect(this.x, this.y, 5,5);
+    ctx.fillRect(this.x, this.y, this.side,this.side);
     for(var i=0;i<this.trail.length;i++){
       if(!this.trail[i].delete)
         this.trail[i].render(ctx);
@@ -226,6 +254,60 @@ class Particle{
 
   }
 }
+
+class EmissionParticle extends Particle{
+  constructor(x,y,color,angle){
+    super(x,y, color);
+    this.ticks = 0
+    this.angle = angle
+    this.trail = [];
+    this.is_trail = false;
+    this.delete = false;
+    this.opacity = 1;
+    // i changed this
+    this.dx = -100 * Math.asin(this.angle);
+    this.dy = 100 * Math.acos(this.angle);
+    this.side = 2
+  }
+  update(d){
+    this.ticks++;
+    if(this.ticks % 1 == 0 && !this.is_trail){
+      var x = this.x;
+      var y = this.y;
+      var p = new EmissionParticle(x,y,this.color,this.angle);
+      p.dx = 0;
+      p.dy = 0;
+      p.opacity = this.opacity
+      p.is_trail = true;
+      this.trail.push(p);
+      this.opacity-=.01*Math.random();
+
+      if(this.opacity < .05){
+        this.delete = true;
+      }
+    }else if(this.is_trail && this.ticks > 30){
+      this.delete = true;
+    }else if(this.is_trail){
+      this.opacity-=.05;
+    }else{
+
+      this.opacity-=.01*Math.random();
+    }
+
+    this.x = this.x + this.dx*d/1000;
+    this.y = this.y + this.dy*d/1000;
+    for(var i=0;i<this.trail.length;i++){
+      this.trail[i].update(d);
+      if(this.trail[i].delete){
+        this.trail.splice(i,1);
+      }
+    }
+
+  }
+
+}
+
+
 class Star{
   constructor(x, y){
     this.x = x
@@ -238,4 +320,8 @@ class Star{
     ctx.drawImage(this.img, this.x, this.y)
     ctx.restore()
   }
+}
+
+function RandomNumberPicker(array_of_numbers){
+  return array_of_numbers[Math.floor(Math.random()*array_of_numbers.length-1)]
 }
